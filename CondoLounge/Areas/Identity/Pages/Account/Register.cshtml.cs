@@ -80,6 +80,16 @@ namespace CondoLounge.Areas.Identity.Pages.Account
             [Display(Name = "Email")]
             public string Email { get; set; }
 
+            [BindProperty]
+            [Required]
+            [Display(Name = "BuildingName")]
+            public string BuildingName { get; set; } = string.Empty;
+
+            [BindProperty]
+            [Required]
+            [Display(Name = "CondoNumber")]
+            public string CondoNumber { get; set; } = string.Empty;
+
             /// <summary>
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
