@@ -8,9 +8,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddIdentity<ApplicationUser, IdentityRole<int>>()
-    .AddEntityFrameworkStores<ApplicationDbContext>()
-    .AddDefaultTokenProviders();
+builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<ApplicationDbContext>();
+
+//builder.Services.AddIdentity<ApplicationUser, IdentityRole<int>>()
+    //.AddEntityFrameworkStores<ApplicationDbContext>()
+    //.AddDefaultTokenProviders();
 
 //Repository
 builder.Services.AddScoped<UserRepository>();
