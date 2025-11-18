@@ -1,7 +1,26 @@
+using CondoLounge.Data;
+using CondoLounge.Data.Entities;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddIdentity<ApplicationUser, IdentityRole<int>>()
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddDefaultTokenProviders();
+
+//Future repository
+//builder.Services.AddScoped<UserRepository>();
+//builder.Services.AddScoped<CondoRepository>();
+//builder.Services.AddScoped<BuildingRepository>();
+
+builder.Services.AddScoped<CondoLounge.Data.IUnitOfWork, CondoLounge.Data.UnitOfWork>();
 
 var app = builder.Build();
 
@@ -18,10 +37,14 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+//Identity Middleware
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.MapRazorPages();
 
 app.Run();

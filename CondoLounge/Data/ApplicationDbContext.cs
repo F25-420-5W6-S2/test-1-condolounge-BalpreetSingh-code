@@ -12,8 +12,15 @@ namespace CondoLounge.Data
         {
         }
         
+        public DbSet<Building> Buildings => Set<Building>();
+        public DbSet<Condo> Condos => Set<Condo>();
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Condo>()
+                .HasIndex(c => new { c.BuildingId, c.CondoNumber})
+                .IsUnique();
+
             base.OnModelCreating(modelBuilder);
         }
     }
