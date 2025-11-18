@@ -12,14 +12,30 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole<int>>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
 
-//Future repository
-//builder.Services.AddScoped<UserRepository>();
-//builder.Services.AddScoped<CondoRepository>();
-//builder.Services.AddScoped<BuildingRepository>();
+//Repository
+builder.Services.AddScoped<UserRepository>();
+builder.Services.AddScoped<CondoRepository>();
+builder.Services.AddScoped<BuildingRepository>();
+
+//Seeding
+builder.Services.AddTransient<CondoRepository>();
+builder.Services.AddControllersWithViews();
+
+builder.Services.AddRazorPages();
+
+var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var seeder = scope.ServiceProvider.GetRequiredService<CondoLoungeSeeder>();
+    await seeder.Seed();
+}
+
 
 builder.Services.AddScoped<CondoLounge.Data.IUnitOfWork, CondoLounge.Data.UnitOfWork>();
 
-var app = builder.Build();
+app.UseHttpsRedirection();
+app.UseStaticFiles();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -28,9 +44,6 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
-
-app.UseHttpsRedirection();
-app.UseStaticFiles();
 
 app.UseRouting();
 
